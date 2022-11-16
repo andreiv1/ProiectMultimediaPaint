@@ -6,9 +6,9 @@ Permite utilizatorului să deseneze folosind un element de tip canvas și să ex
 
 ## Cerințe
 
-- [ ] 1p - desenare cu un instrument (elipsă)
-- [ ] 1p - desenarea se face utilizând mouse-ul cu preview
-- [ ] 1.5p - instrumente multiple (+ dreptunghi, linie)
+- [x] 1p - desenare cu un instrument (elipsă)
+- [x] 1p - desenarea se face utilizând mouse-ul cu preview
+- [x] 1.5p - instrumente multiple (+ dreptunghi, linie)
 - [ ] 1p - posibilitate de selectare culoare și grosime linie pentru instrument(e)
 - [ ] 0.5p - export imagine curentă într-un format raster (fișier PNG / JPEG / …)
 - [ ] 1p - export imagine curentă în format vectorial (fișier SVG)
