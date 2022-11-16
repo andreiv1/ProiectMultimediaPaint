@@ -1,0 +1,60 @@
+body {
+  font-family: 'Montserrat';
+}
+
+canvas {
+  border: 1px solid black;
+}
+
+
+
+
+.palette {
+  width: 23px;
+  height: 23px;
+  float: left;
+  margin: 6px;
+}
+
+.red {
+  background-color: red;
+}
+
+.shape {
+  width: 30px;
+  height: 30px;
+}
+
+.shape:hover {
+  background-color: springgreen !important;
+}
+#shapeRectangle {
+  background-color: rgb(68, 66, 66);
+  width: 43px !important;
+}
+
+#shapeEllipse {
+  border-radius: 80%;
+  width: 40px !important;
+  background-color: rgb(68, 66, 66);
+}
+
+/* #shapeTriangle {
+    width: 0;
+    height: 0;
+    border-left: 20px solid transparent;
+    border-right: 20px solid transparent;
+    border-bottom: 30px solid rgb(68, 66, 66);
+} */
+
+#shapeLine > hr {
+  border: 2px solid rgb(68, 66, 66);
+  margin-top:12px;
+}
+
+.shape-container {
+  display: inline-flex;
+  margin-right: 2px;
+  border: 1px solid transparent;
+}
+
