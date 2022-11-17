@@ -38,7 +38,8 @@ function mouseDown(e) {
 function mouseMove(e) {
     if (drawingStatus) {
         updateMousePosition(e);
-        if (selectedShape == shapeType['line']) {
+        if (selectedShape == shapeType['line']
+        && (sX != mX && sY != mY)) {
             drawLine();
         }
         if (selectedShape == shapeType['rectangle']) {
@@ -53,11 +54,11 @@ function mouseMove(e) {
 //mouse is inactive
 function mouseUp(e) {
     drawingStatus = false;
-    console.log('mouse is up (OFF)')
+    console.log('%cMouse is up (OFF)', 'color: red; background: yellow; font-size: 15px');
 
     //save the shape the user drew
-    if (selectedShape == shapeType['line'] &&
-        (sX != mX && sY != mY)) {
+    if (selectedShape == shapeType['line'] 
+        && (sX != mX && sY != mY)) {
         Shapes.push({
             startX: sX, startY: sY, endX: mX, endY: mY,
             color: currentColor,
@@ -90,6 +91,10 @@ function mouseUp(e) {
             type: shapeType['ellipse']
         })
     }
+
+    console.log('%cShapes:', 'color: orange; font-size: 11px');
+    console.log(Shapes);
+    loadShapesList()
 }
 function resetCanvas() {
     context.clearRect(0, 0, canvas.width, canvas.height);
@@ -99,7 +104,7 @@ function resetCanvas() {
             let line = Shapes[i];
             context.moveTo(line.startX, line.startY);
             context.lineTo(line.endX, line.endY);
-            // context.lineWidth = line.lineWidth;
+            context.lineWidth = line.lineWidth;
             context.strokeStyle = line.color;
             context.stroke();
 
@@ -119,6 +124,7 @@ function resetCanvas() {
             context.stroke();
         }
     }
+    loadShapesList()
 }
 
 function drawLine() {
@@ -127,7 +133,7 @@ function drawLine() {
         context.beginPath();
         context.moveTo(sX, sY);
         context.lineTo(mX, mY);
-        // context.lineWidth = currentLineWidth;
+        context.lineWidth = currentLineWidth;
         context.strokeStyle = currentColor;
         context.stroke();
     }
@@ -170,6 +176,23 @@ function drawEllipse(isCtrlPressed = false) {
     }
 }
 
+function loadShapesList(){
+    shapesList.innerHTML = '';
+    for(let i = 0; i < Shapes.length; i++){
+        let shape = Shapes[i];
+        let li = document.createElement('li')
+        li.innerHTML = JSON.stringify(shape);
+        li.dataset.id = i; 
+        li.addEventListener('click', (e) => {deleteShape(i)})
+        shapesList.append(li)
+    }
+}
+
+function deleteShape(shapeId){
+    // alert('Are you sure you want to delete the selected shape?')
+    Shapes.splice(shapeId, 1);
+    resetCanvas();
+}
 
 app = () => {
     canvas = document.querySelector('canvas');
@@ -200,13 +223,13 @@ app = () => {
 
     colorPicker.addEventListener('change', (e) => {
         currentColor = colorPicker.value;
-        console.log(currentColor);
     })
 
     lineWidthRange.addEventListener('change', (e) => {
-        currentLineWidth = lineWidthRange.value;
-        console.log(currentLineWidth);
+        currentLineWidth = parseInt(lineWidthRange.value);
     })
+
+    var shapesList = document.getElementById('shapesList');
 
 }
 
