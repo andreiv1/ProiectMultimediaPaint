@@ -1,6 +1,7 @@
 const shapeType = { "line": 1, "ellipse": 2, "rectangle": 3 }
+const shapeName = ["shapeNames","line", "ellipse", "rectangle"]
 const UNSELECTED_SHAPE = -1;
-const selectedBackgroundColor = 'springgreen';
+
 const defaultColor = '#000000';
 const defaultLineWidth = 1;
 var canvas, context;
@@ -179,12 +180,48 @@ function drawEllipse(isCtrlPressed = false) {
 
 function loadShapesList(){
     shapesList.innerHTML = '';
+    let countLines = 0, countEllipses = 0, countRectangles = 0;
+    let warningListEmpty = document.getElementById('shapesListEmpty')
+    if(Shapes.length > 0){
+        warningListEmpty.style.display = 'none';
+        
+    } else {
+        warningListEmpty.style.display = 'block';
+    }
     for(let i = 0; i < Shapes.length; i++){
         let shape = Shapes[i];
         let li = document.createElement('li')
-        li.innerHTML = JSON.stringify(shape);
+        // li.innerHTML = JSON.stringify(shape);
+        li.innerHTML = '<span class="shapeTitle">'
+        li.innerHTML += shapeName[shape.type]
+        if(shape.type == shapeType['line']) {
+            countLines++;
+            li.innerHTML += ' #' + countLines;
+        } else if(shape.type == shapeType['ellipse']){
+            countEllipses++;
+            li.innerHTML += ' #' + countEllipses;
+        }
+        else if(shape.type == shapeType['rectangle']){
+            countRectangles++;
+            li.innerHTML += ' #' + countRectangles;
+        }
+        li.innerHTML += '</span>'
+        let iconOptions = document.createElement('i')
+        iconOptions.className = 'fa fa-ellipsis-v optionIcon'
+        let iconDelete = document.createElement('i')
+        iconDelete.className = 'fas fa-trash-alt optionIcon'
+        li.appendChild(iconOptions)
+        li.appendChild(iconDelete)
+        li.className = 'object'
         li.dataset.id = i; 
-        li.addEventListener('click', (e) => {deleteShape(i)})
+        iconDelete.addEventListener('click', (e) => {
+            e.preventDefault();
+            console.log("delete clicked");
+            deleteShape(i)})
+        iconOptions.addEventListener('click', (e) =>{
+            e.preventDefault();
+            console.log("options clicked");
+        });
         shapesList.append(li)
     }
 }
@@ -193,6 +230,17 @@ function deleteShape(shapeId){
     // alert('Are you sure you want to delete the selected shape?')
     Shapes.splice(shapeId, 1);
     resetCanvas();
+}
+function addColorsListeners(){
+    var colors = document.querySelectorAll('.options.colors>li')
+    for(let i = 0; i < colors.length-1; i++)
+    {
+        let color = colors[i];
+        color.addEventListener('click', (e) => {
+            currentColor = color.style.backgroundColor;
+        })
+        // console.log(color.style.backgroundColor);
+    }
 }
 
 app = () => {
@@ -231,7 +279,7 @@ app = () => {
     })
 
     var shapesList = document.getElementById('shapesList');
-
+    addColorsListeners();
 }
 
 document.addEventListener('DOMContentLoaded', app);

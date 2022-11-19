@@ -7,32 +7,69 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Canvas Paint</title>
     <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
+
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <div class="content">
-        <div class="shapes-container">
-            <div class="shape-container">
-                <div class="shape" id="shapeEllipse"></div>
-            </div>
-            <div class="shape-container">
-                <div class="shape" id="shapeRectangle"></div>
-            </div>
-            <div class="shape-container">
-                <div class="shape" id="shapeLine">
-                    <hr>
-                </div>
-            </div>
-        </div>
-        <div class="controls">
-            <input type="color" value="#000000" id="colorPicker">
-            <input type="range" min="1" max="10" value="1" id="lineWidthRange">
-        </div>
-        <canvas width="900" height="600"></canvas>
-        <ol id="shapesList">
 
-        </ol>
+    <div class="content">
+        <section class="settings-pane">
+            <div class="row">
+                <label for="shapes" class="title">Shapes</label>
+                <ul class="options">
+                    <li class="option" id="shapeLine">
+                        <img src="assets/line.svg">
+                        <span>Line</span>
+                    </li>
+                    <li class="option" id="shapeRectangle">
+                        <img src="assets/rectangle.svg">
+                        <span>Rectangle</span>
+                    </li>
+                    <li class="option" id="shapeEllipse">
+                        <img src="assets/ellipse.svg">
+                        <span>Ellipse</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="row">
+                <label class="title">Line Width</label>
+                <ul class="options">
+                    <input type="range" min="1" max="10" value="1" id="lineWidthRange">
+                </ul>
+            </div>
+            <div class="row">
+                <label class="title">Colors</label>
+                <ul class="options colors">
+                    <li class="option" style="background-color: black"></li>
+                    <li class="option" style="background-color: gray;"></li>
+                    <li class="option" style="background-color: darkred;"></li>
+                    <li class="option" style="background-color: red;"></li>
+                    <li class="option" style="background-color: orange;"></li>
+                    <li class="option" style="background-color: yellow;"></li>
+                    <li class="option" style="background-color:  green;"></li>
+                    <li class="option" style="background-color: turquoise;"></li>
+                    <li class="option" style="background-color: indigo;"></li>
+                    <li class="option" style="background-color: pink;"></li>
+                    <li class="option" style="background-color: whitesmoke"></li>
+                    <li class="option"><input type="color" value="#000000" id="colorPicker"></li>
+                    
+                </ul>
+            </div>
+        </section>
+        <section class="canvas-pane">
+            <canvas width="800" height="600"></canvas>
+        </section>
+        <section class="objects-pane">
+            <div class="row">
+                <label class="title">List of Shapes</label>
+                <p id="shapesListEmpty">There are no shapes in the list.</p>
+                <ol id="shapesList">
+                </ol>
+            </div>
+            
+        </section>
     </div>
 
     <script src="script.js"></script>

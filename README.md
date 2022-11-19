@@ -13,5 +13,5 @@ Permite utilizatorului să deseneze folosind un element de tip canvas și să ex
 - [ ] 0.5p - export imagine curentă într-un format raster (fișier PNG / JPEG / …)
 - [ ] 1p - export imagine curentă în format vectorial (fișier SVG)
 - [ ] 1p - selectare culoare background
-- [ ] 2p - afișare lista de figuri existentă în desen și posibilitatea de a șterge o figură oarecare
+- [x] 2p - afișare lista de figuri existentă în desen și posibilitatea de a șterge o figură oarecare
 - [ ] 2p - modificarea proprietăților pentru o figură selectată din listă(coordonate, dimensiune)

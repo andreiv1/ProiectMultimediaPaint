@@ -1,60 +1,146 @@
 body {
   font-family: 'Montserrat';
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: rgb(48, 185, 223);
 }
 
-canvas {
-  border: 1px solid black;
+.content {
+  display: flex;
+  width: 100%;
+  gap: 10px;
+  padding: 100px;
+  max-width: 1000px;
 }
 
-
-
-
-.palette {
-  width: 23px;
-  height: 23px;
-  float: left;
-  margin: 6px;
+section {
+  background: #fff;
+  border-radius: 5px;
+}
+.canvas-pane {
+  flex: 1;
 }
 
-.red {
+.objects-pane {
+  flex-shrink: 0;
+  width: 200px;
+  height: 600px;
+  padding: 15px 22px 0;
+  overflow: auto;
+}
+
+.settings-pane {
+  width: 210px;
+  padding: 15px 22px 0;
+}
+
+.settings-pane row {
+  margin-bottom: 20px;
+}
+
+.row .options {
+  list-style: none;
+  margin: 10px 0 0 5px;
+  display: block;
+  margin-block-start: 0;
+  margin-block-end: 0;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  padding-inline-start: 0px;
+}
+
+.row > .title {
+  font-size: 15px;
+  font-weight: 800;
+}
+.row .options .option {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.row {
+  margin-bottom: 20px;
+}
+
+.row .options .option:hover :where(span, img) {
+  filter: invert(17%) sepia(90%) saturate(3000%) hue-rotate(900deg)
+    brightness(100%) contrast(100%);
+}
+
+.option > img {
+  margin-right: 10px;
+}
+
+.colors {
+  list-style: none;
+}
+.colors > .option {
+  float: Left;
+  width: 20px;
+  height: 20px;
   background-color: red;
+  border-radius: 50%;
+  margin-right: 5px;
+  border: 0.7px solid #bfbfbf;
 }
 
-.shape {
-  width: 30px;
-  height: 30px;
+.colors > .option:nth-child(12) {
+  background-image: url(assets/color_circle.svg);
+  background-size: 20px 20px;
 }
 
-.shape:hover {
-  background-color: springgreen !important;
-}
-#shapeRectangle {
-  background-color: rgb(68, 66, 66);
-  width: 43px !important;
+#colorPicker {
+  opacity: 0;
+  cursor: pointer;
 }
 
-#shapeEllipse {
-  border-radius: 80%;
-  width: 40px !important;
-  background-color: rgb(68, 66, 66);
+#shapesList {
+  margin-block-start: 0;
+  margin-block-end: 0;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  padding-inline-start: 0px;
+}
+.object {
+  margin-top: 10px;
+  list-style: none;
+  padding: 10px 20px;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
+  position: relative;
+  background: white;
+  transition: all 0.3s;
+  border-radius: 7px;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  flex: 1;
 }
 
-/* #shapeTriangle {
-    width: 0;
-    height: 0;
-    border-left: 20px solid transparent;
-    border-right: 20px solid transparent;
-    border-bottom: 30px solid rgb(68, 66, 66);
-} */
-
-#shapeLine > hr {
-  border: 2px solid rgb(68, 66, 66);
-  margin-top:12px;
+.object:hover {
+  transform: scale(1.1);
+  z-index: 100;
+  background: #0095f3;
+  color: #fff;
 }
 
-.shape-container {
-  display: inline-flex;
-  margin-right: 2px;
-  border: 1px solid transparent;
+.object > i:hover{
+  color: rgb(209, 74, 74);
+}
+
+.object > li {
+  display: flex;
+}
+
+.object > .shapeTitle {
+  font-size: 14px;
+  flex: 1;
+  text-align: right;
+}
+.object > .optionIcon {
+  margin-left: 13px;
+  cursor: pointer;
 }
 
