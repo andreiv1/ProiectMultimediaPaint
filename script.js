@@ -116,6 +116,7 @@ function resetCanvas() {
             let rectangle = Shapes[i];
             context.beginPath();
             context.fillStyle = rectangle.color;
+            context.strokeStyle = rectangle.color;
             context.fillRect(rectangle.x, rectangle.y, rectangle.w, rectangle.h);
             context.stroke();
 
@@ -124,6 +125,7 @@ function resetCanvas() {
             context.beginPath();
             context.ellipse(ellipse.x, ellipse.y, ellipse.horizontalRadius, ellipse.verticalRadius, 0, 0, 2 * Math.PI);
             context.fillStyle = ellipse.color;
+            context.strokeStyle = ellipse.color;
             context.fill();
             context.stroke();
         }
