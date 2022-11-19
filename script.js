@@ -102,6 +102,7 @@ function resetCanvas() {
         let shape = Shapes[i];
         if (shape.type == shapeType['line']) {
             let line = Shapes[i];
+            context.beginPath();
             context.moveTo(line.startX, line.startY);
             context.lineTo(line.endX, line.endY);
             context.lineWidth = line.lineWidth;
