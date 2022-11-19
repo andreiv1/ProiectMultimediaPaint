@@ -56,10 +56,12 @@ function mouseMove(e) {
 function mouseUp(e) {
     drawingStatus = false;
     console.log('%cMouse is up (OFF)', 'color: red; background: yellow; font-size: 15px');
-
+    if(sX == mX && sY == mY){
+        //do not draw empty points
+        return;
+    }
     //save the shape the user drew
-    if (selectedShape == shapeType['line'] 
-        && (sX != mX && sY != mY)) {
+    if (selectedShape == shapeType['line']) {
         Shapes.push({
             startX: sX, startY: sY, endX: mX, endY: mY,
             color: currentColor,
