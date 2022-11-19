@@ -169,8 +169,8 @@ function drawEllipse(isCtrlPressed = false) {
             context.ellipse(sX, sY, Math.abs(mX - sX), Math.abs(mY - sY), 0, 0, 2 * Math.PI);
 
         }
-
         context.fillStyle = currentColor;
+        context.strokeStyle = currentColor;
         context.fill();
         context.stroke();
 
