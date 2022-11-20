@@ -24,7 +24,7 @@ section {
 
 .objects-pane {
   flex-shrink: 0;
-  width: 200px;
+  width: 210px;
   height: 600px;
   padding: 15px 22px 0;
   overflow: auto;
@@ -120,14 +120,16 @@ section {
 }
 
 .object:hover {
-  transform: scale(1.1);
-  z-index: 100;
   background: #0095f3;
   color: #fff;
 }
 
-.object > i:hover{
-  color: rgb(209, 74, 74);
+.object > .fa-trash-alt:hover {
+  color: red;
+}
+
+.object > .fa-ellipsis-v:hover {
+  color: darkorchid;
 }
 
 .object > li {
@@ -144,3 +146,18 @@ section {
   cursor: pointer;
 }
 
+.popupLine,
+.popupEllipse,
+.popupRectangle {
+  display: none;
+}
+
+.popup {
+  background-color: #ffffff;
+  width: 200px;
+  padding: 30px 40px;
+  position: fixed;
+  top: 30px;
+  right: 30px;
+  border-radius: 8px;
+}

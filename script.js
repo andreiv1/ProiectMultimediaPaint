@@ -1,5 +1,5 @@
 const shapeType = { "line": 1, "ellipse": 2, "rectangle": 3 }
-const shapeName = ["shapeNames","line", "ellipse", "rectangle"]
+const shapeName = ["shapeNames", "line", "ellipse", "rectangle"]
 const UNSELECTED_SHAPE = -1;
 
 const defaultColor = '#000000';
@@ -39,8 +39,11 @@ function mouseDown(e) {
 function mouseMove(e) {
     if (drawingStatus) {
         updateMousePosition(e);
-        if (selectedShape == shapeType['line']
-        && (sX != mX && sY != mY)) {
+        if (sX == mX && sY == mY) {
+            //do not draw empty points
+            return;
+        }
+        if (selectedShape == shapeType['line']) {
             drawLine();
         }
         if (selectedShape == shapeType['rectangle']) {
@@ -56,7 +59,7 @@ function mouseMove(e) {
 function mouseUp(e) {
     drawingStatus = false;
     console.log('%cMouse is up (OFF)', 'color: red; background: yellow; font-size: 15px');
-    if(sX == mX && sY == mY){
+    if (sX == mX && sY == mY) {
         //do not draw empty points
         return;
     }
@@ -75,7 +78,7 @@ function mouseUp(e) {
         if (e.ctrlKey) {
             //if ctrl is pressed, draw a square
             squareH = squareW;
-        } 
+        }
         Shapes.push({
             x: sX, y: sY, w: squareW, h: squareH,
             color: currentColor,
@@ -83,9 +86,9 @@ function mouseUp(e) {
         })
         drawRectangle(e.ctrlKey);
     }
-    else if (selectedShape == shapeType['ellipse']){
+    else if (selectedShape == shapeType['ellipse']) {
         let horizontalRadius = Math.abs(mX - sX), verticalRadius = Math.abs(mY - sY);
-        if(e.ctrlKey) {
+        if (e.ctrlKey) {
             verticalRadius = horizontalRadius;
         }
         Shapes.push({
@@ -186,26 +189,26 @@ function loadShapesList() {
     shapesList.innerHTML = '';
     let countLines = 0, countEllipses = 0, countRectangles = 0;
     let warningListEmpty = document.getElementById('shapesListEmpty')
-    if(Shapes.length > 0){
+    if (Shapes.length > 0) {
         warningListEmpty.style.display = 'none';
-        
+
     } else {
         warningListEmpty.style.display = 'block';
     }
-    for(let i = 0; i < Shapes.length; i++){
+    for (let i = 0; i < Shapes.length; i++) {
         let shape = Shapes[i];
         let li = document.createElement('li')
         // li.innerHTML = JSON.stringify(shape);
         li.innerHTML = '<span class="shapeTitle">'
         li.innerHTML += shapeName[shape.type]
-        if(shape.type == shapeType['line']) {
+        if (shape.type == shapeType['line']) {
             countLines++;
             li.innerHTML += ' #' + countLines;
-        } else if(shape.type == shapeType['ellipse']){
+        } else if (shape.type == shapeType['ellipse']) {
             countEllipses++;
             li.innerHTML += ' #' + countEllipses;
         }
-        else if(shape.type == shapeType['rectangle']){
+        else if (shape.type == shapeType['rectangle']) {
             countRectangles++;
             li.innerHTML += ' #' + countRectangles;
         }
@@ -217,28 +220,169 @@ function loadShapesList() {
         li.appendChild(iconOptions)
         li.appendChild(iconDelete)
         li.className = 'object'
-        li.dataset.id = i; 
+        li.dataset.id = i;
+
         iconDelete.addEventListener('click', (e) => {
             e.preventDefault();
             console.log("delete clicked");
-            deleteShape(i)})
-        iconOptions.addEventListener('click', (e) =>{
-            e.preventDefault();
-            console.log("options clicked");
-        });
+            deleteShape(i)
+        })
+
+        if (shape.type == shapeType['line']) {
+            var popupLine = document.querySelector('.popupLine');
+            iconOptions.addEventListener('click', (e) => {
+                e.preventDefault();
+                closePopup();
+                console.log("Line options clicked");
+                popupLine.style.display = 'block'
+
+                let startX = document.getElementById('startX')
+                let startY = document.getElementById('startY')
+                let endX = document.getElementById('endX')
+                let endY = document.getElementById('endY')
+
+                startX.value = shape.startX;
+                startY.value = shape.startY;
+                endX.value = shape.endX;
+                endY.value = shape.endY;
+
+                startX.dataset.shapeId = i;
+                startY.dataset.shapeId = i;
+                endX.dataset.shapeId = i;
+                endY.dataset.shapeId = i;
+
+                startX.addEventListener('change', (e) => {
+                    let shapeId = startX.dataset.shapeId;
+                    let selShape = Shapes[shapeId]
+                    selShape.startX = parseFloat(startX.value)
+                    resetCanvas();
+                });
+                startY.addEventListener('change', (e) => {
+                    let shapeId = startX.dataset.shapeId;
+                    let selShape = Shapes[shapeId]
+                    selShape.startY = parseFloat(startY.value)
+                    resetCanvas();
+                });
+                endX.addEventListener('change', (e) => {
+                    let shapeId = startX.dataset.shapeId;
+                    let selShape = Shapes[shapeId]
+                    selShape.endX = parseFloat(endX.value)
+                    resetCanvas();
+                });
+                endY.addEventListener('change', (e) => {
+                    let shapeId = startX.dataset.shapeId;
+                    let selShape = Shapes[shapeId]
+                    selShape.endY = parseFloat(endY.value)
+                    resetCanvas();
+                })
+            });
+        } else if (shape.type == shapeType['ellipse']) {
+            var popupEllipse = document.querySelector('.popupEllipse');
+            iconOptions.addEventListener('click', (e) => {
+                e.preventDefault();
+                closePopup();
+                console.log("Rectangle options clicked");
+                popupEllipse.style.display = 'block'
+
+                let elX = document.getElementById('elX')
+                let elY = document.getElementById('elY')
+                let elHRad = document.getElementById('elHRad')
+                let elVRad = document.getElementById('elVRad')
+
+                elX.value = shape.x;
+                elY.value = shape.y;
+                elHRad.value = shape.horizontalRadius;
+                elVRad.value = shape.verticalRadius;
+
+                elX.dataset.shapeId = i;
+
+                elX.addEventListener('change', (e) => {
+                    let shapeId = elX.dataset.shapeId;
+                    let selShape = Shapes[shapeId]
+                    selShape.x = elX.value;
+                    resetCanvas();
+                })
+
+                elY.addEventListener('change', (e) => {
+                    let shapeId = elX.dataset.shapeId;
+                    let selShape = Shapes[shapeId]
+                    selShape.y = elY.value;
+                    resetCanvas();
+                })
+                elHRad.addEventListener('change', (e) => {
+                    let shapeId = elX.dataset.shapeId;
+                    let selShape = Shapes[shapeId]
+                    selShape.horizontalRadius = elHRad.value;
+                    resetCanvas();
+                })
+                elVRad.addEventListener('change', (e) => {
+                    let shapeId = elX.dataset.shapeId;
+                    let selShape = Shapes[shapeId]
+                    selShape.verticalRadius = elVRad.value;
+                    resetCanvas();
+                })
+            });
+        } else if (shape.type == shapeType['rectangle']) {
+            var popupRectangle = document.querySelector('.popupRectangle');
+            iconOptions.addEventListener('click', (e) => {
+                e.preventDefault();
+                closePopup();
+                console.log("Rectangle options clicked");
+                popupRectangle.style.display = 'block'
+
+                let rectX = document.getElementById('rectX')
+                let rectY = document.getElementById('rectY')
+                let rectW = document.getElementById('rectW')
+                let rectH = document.getElementById('rectH')
+
+                rectX.value = shape.x;
+                rectY.value = shape.y;
+                rectW.value = shape.w;
+                rectH.value = shape.h;
+
+                rectX.dataset.shapeId = i;
+
+                rectX.addEventListener('change', (e) => {
+                    let shapeId = rectX.dataset.shapeId;
+                    let selShape = Shapes[shapeId]
+                    selShape.x = rectX.value;
+                    resetCanvas();
+                });
+
+                rectY.addEventListener('change', (e) => {
+                    let shapeId = rectX.dataset.shapeId;
+                    let selShape = Shapes[shapeId]
+                    selShape.y = rectY.value;
+                    resetCanvas();
+                });
+
+                rectW.addEventListener('change', (e) => {
+                    let shapeId = rectX.dataset.shapeId;
+                    let selShape = Shapes[shapeId]
+                    selShape.w = rectW.value;
+                    resetCanvas();
+                })
+                rectH.addEventListener('change', (e) => {
+                    let shapeId = rectX.dataset.shapeId;
+                    let selShape = Shapes[shapeId]
+                    selShape.h = rectH.value;
+                    resetCanvas();
+                })
+            });
+        }
         shapesList.append(li)
     }
 }
 
-function deleteShape(shapeId){
+function deleteShape(shapeId) {
     // alert('Are you sure you want to delete the selected shape?')
     Shapes.splice(shapeId, 1);
+    closePopup();
     resetCanvas();
 }
-function addColorsListeners(){
+function addColorsListeners() {
     var colors = document.querySelectorAll('.options.colors>li')
-    for(let i = 0; i < colors.length-1; i++)
-    {
+    for (let i = 0; i < colors.length - 1; i++) {
         let color = colors[i];
         color.addEventListener('click', (e) => {
             currentColor = color.style.backgroundColor;
@@ -247,6 +391,13 @@ function addColorsListeners(){
     }
 }
 
+function closePopup() {
+    elements = document.getElementsByClassName('popup')
+    console.log('close popup')
+    for (let element of elements) {
+        element.style.display = 'none';
+    }
+}
 app = () => {
     canvas = document.querySelector('canvas');
     context = canvas.getContext('2d');
@@ -284,6 +435,17 @@ app = () => {
 
     var shapesList = document.getElementById('shapesList');
     addColorsListeners();
+
+    // var popup = document.querySelector('.popupLine');
+
+    for (let btn of document.getElementsByClassName('closePopup')) {
+        console.log(btn);
+        btn.addEventListener('click', (e) => {
+            closePopup();
+        })
+    }
+
+
 }
 
 document.addEventListener('DOMContentLoaded', app);
