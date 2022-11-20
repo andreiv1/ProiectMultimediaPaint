@@ -182,7 +182,7 @@ function drawEllipse(isCtrlPressed = false) {
     }
 }
 
-function loadShapesList(){
+function loadShapesList() {
     shapesList.innerHTML = '';
     let countLines = 0, countEllipses = 0, countRectangles = 0;
     let warningListEmpty = document.getElementById('shapesListEmpty')
