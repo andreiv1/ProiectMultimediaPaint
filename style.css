@@ -16,10 +16,10 @@ body {
 
 section {
   background: #fff;
-  border-radius: 5px;
 }
 .canvas-pane {
   flex: 1;
+  padding: 0 !important;
 }
 
 .objects-pane {
@@ -75,10 +75,11 @@ section {
 }
 
 .colors {
-  list-style: none;
+  display: flex;
 }
 .colors > .option {
-  float: Left;
+  display: inline-block !important;
+  vertical-align: top;
   width: 20px;
   height: 20px;
   background-color: red;
@@ -90,6 +91,10 @@ section {
 .colors > .option:nth-child(12) {
   background-image: url(assets/color_circle.svg);
   background-size: 20px 20px;
+}
+
+.row:nth-child(4) {
+  clear: both;
 }
 
 #colorPicker {
@@ -157,7 +162,11 @@ section {
   width: 200px;
   padding: 30px 40px;
   position: fixed;
-  top: 30px;
-  right: 30px;
+  top: 12%;
+  right: 10%;
   border-radius: 8px;
+}
+
+.option > button {
+  width: 100%;
 }

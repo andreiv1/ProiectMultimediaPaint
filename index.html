@@ -36,7 +36,18 @@
             <div class="row">
                 <label class="title">Line Width</label>
                 <ul class="options">
-                    <input type="range" min="1" max="10" value="1" id="lineWidthRange">
+                    <li class="option">
+                        <input type="range" min="1" max="10" value="1" id="lineWidthRange">
+                    </li>
+                </ul>
+            </div>
+            <div class="row">
+                <label class="title">Background</label>
+                <ul class="options">
+                    <li class="option" id="changeBackground">
+                        <img src="assets/bg-color.svg" width="20" height="20">
+                        <span>Change BG</span>
+                    </li>
                 </ul>
             </div>
             <div class="row">
@@ -54,12 +65,23 @@
                     <li class="option" style="background-color: pink;"></li>
                     <li class="option" style="background-color: whitesmoke"></li>
                     <li class="option"><input type="color" value="#000000" id="colorPicker"></li>
-                    
+
+                </ul>
+            </div>
+            <div class="row">
+                <label class="title">Export</label>
+                <ul class="options">
+                    <li class="option">
+                        <button id="btnRaster">Raster</button>
+                    </li>
+                    <li class="option">
+                        <button id="btnSvg">SVG</button>
+                    </li>
                 </ul>
             </div>
         </section>
         <section class="canvas-pane">
-            <canvas width="800" height="600"></canvas>
+            <canvas width="800" height="610"></canvas>
         </section>
         <section class="objects-pane">
             <div class="row">
@@ -68,12 +90,12 @@
                 <ol id="shapesList">
                 </ol>
             </div>
-            
+
         </section>
     </div>
     <div class="popup popupLine">
         <button class="closePopup">&times;</button>
-        <h2>Properties</h2>
+        <h3>Line Properties</h3>
         <label>Start X</label>
         <input type="number" id="startX" name="startX">
         <label>Start Y</label>
@@ -86,7 +108,7 @@
 
     <div class="popup popupEllipse">
         <button class="closePopup">&times;</button>
-        <h2>Properties</h2>
+        <h3>Ellipse Properties</h3>
         <label>X</label>
         <input type="number" id="elX" name="elX">
         <label>Y</label>
@@ -99,7 +121,7 @@
 
     <div class="popup popupRectangle">
         <button class="closePopup">&times;</button>
-        <h2>Properties</h2>
+        <h3>Rectangle Properties</h3>
         <label>X</label>
         <input type="number" id="rectX" name="rectX">
         <label>Y</label>

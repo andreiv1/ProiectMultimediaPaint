@@ -3,6 +3,7 @@ const shapeName = ["shapeNames", "line", "ellipse", "rectangle"]
 const UNSELECTED_SHAPE = -1;
 
 const defaultColor = '#000000';
+const defaultBgColor = 'white'
 const defaultLineWidth = 1;
 var canvas, context;
 
@@ -10,7 +11,8 @@ var drawingStatus = false;
 var selectedShape = UNSELECTED_SHAPE;
 var currentColor = defaultColor;
 var currentLineWidth = defaultLineWidth;
-
+var bgColor = defaultBgColor;
+var bgColorStatus = false;
 var Shapes = [];
 
 //Current mouse position:
@@ -26,7 +28,7 @@ function updateMousePosition(e) {
 
 //mouse is active
 function mouseDown(e) {
-    if (selectedShape != UNSELECTED_SHAPE) {
+    if (selectedShape != UNSELECTED_SHAPE && bgColorStatus == false) {
         drawingStatus = true;
         console.log('%cMouse is Down (ON)', 'color: green; background: yellow; font-size: 15px');
         updateMousePosition(e);
@@ -37,7 +39,7 @@ function mouseDown(e) {
 
 //moving while mouse is active
 function mouseMove(e) {
-    if (drawingStatus) {
+    if (drawingStatus && bgColorStatus == false) {
         updateMousePosition(e);
         if (sX == mX && sY == mY) {
             //do not draw empty points
@@ -58,52 +60,59 @@ function mouseMove(e) {
 //mouse is inactive
 function mouseUp(e) {
     drawingStatus = false;
-    console.log('%cMouse is up (OFF)', 'color: red; background: yellow; font-size: 15px');
-    if (sX == mX && sY == mY) {
-        //do not draw empty points
-        return;
-    }
-    //save the shape the user drew
-    if (selectedShape == shapeType['line']) {
-        Shapes.push({
-            startX: sX, startY: sY, endX: mX, endY: mY,
-            color: currentColor,
-            lineWidth: currentLineWidth,
-            type: shapeType['line']
-        })
-        drawLine();
-    }
-    else if (selectedShape == shapeType['rectangle']) {
-        let squareW = mX - sX, squareH = mY - sY;
-        if (e.ctrlKey) {
-            //if ctrl is pressed, draw a square
-            squareH = squareW;
+    console.log('%cMouse is up (OFF)', 'color: red; background: yellow; font-size: 15px'); 
+    if (bgColorStatus == true) {
+        resetCanvas();
+    } else {
+        if (sX == mX && sY == mY) {
+            //do not draw empty points
+            return;
         }
-        Shapes.push({
-            x: sX, y: sY, w: squareW, h: squareH,
-            color: currentColor,
-            type: shapeType['rectangle']
-        })
-        drawRectangle(e.ctrlKey);
-    }
-    else if (selectedShape == shapeType['ellipse']) {
-        let horizontalRadius = Math.abs(mX - sX), verticalRadius = Math.abs(mY - sY);
-        if (e.ctrlKey) {
-            verticalRadius = horizontalRadius;
+        //save the shape the user drew
+        if (selectedShape == shapeType['line']) {
+            Shapes.push({
+                startX: sX, startY: sY, endX: mX, endY: mY,
+                color: currentColor,
+                lineWidth: currentLineWidth,
+                type: shapeType['line']
+            })
+            drawLine();
         }
-        Shapes.push({
-            x: sX, y: sY, horizontalRadius: horizontalRadius, verticalRadius: verticalRadius,
-            color: currentColor,
-            type: shapeType['ellipse']
-        })
-    }
+        else if (selectedShape == shapeType['rectangle']) {
+            let squareW = mX - sX, squareH = mY - sY;
+            if (e.ctrlKey) {
+                //if ctrl is pressed, draw a square
+                squareH = squareW;
+            }
+            Shapes.push({
+                x: sX, y: sY, w: squareW, h: squareH,
+                color: currentColor,
+                type: shapeType['rectangle']
+            })
+            drawRectangle(e.ctrlKey);
+        }
+        else if (selectedShape == shapeType['ellipse']) {
+            let horizontalRadius = Math.abs(mX - sX), verticalRadius = Math.abs(mY - sY);
+            if (e.ctrlKey) {
+                verticalRadius = horizontalRadius;
+            }
+            Shapes.push({
+                x: sX, y: sY, horizontalRadius: horizontalRadius, verticalRadius: verticalRadius,
+                color: currentColor,
+                type: shapeType['ellipse']
+            })
+        }
 
-    console.log('%cShapes:', 'color: orange; font-size: 11px');
-    console.log(Shapes);
-    loadShapesList()
+        console.log('%cShapes:', 'color: orange; font-size: 11px');
+        console.log(Shapes);
+        loadShapesList()
+    }
 }
 function resetCanvas() {
     context.clearRect(0, 0, canvas.width, canvas.height);
+    console.log('bgColor', bgColor);
+    context.fillStyle = bgColor;
+    context.fillRect(0, 0, canvas.width, canvas.height)
     for (let i = 0; i < Shapes.length; i++) {
         let shape = Shapes[i];
         if (shape.type == shapeType['line']) {
@@ -140,10 +149,10 @@ function drawLine() {
     resetCanvas();
     if (drawingStatus) {
         context.beginPath();
-        context.moveTo(sX, sY);
-        context.lineTo(mX, mY);
         context.lineWidth = currentLineWidth;
         context.strokeStyle = currentColor;
+        context.moveTo(sX, sY);
+        context.lineTo(mX, mY);
         context.stroke();
     }
 }
@@ -152,6 +161,8 @@ function drawRectangle(isCtrlPressed = false) {
     resetCanvas();
     if (drawingStatus) {
         context.beginPath();
+        context.fillStyle = currentColor;
+        context.fill();
         if (isCtrlPressed) {
             //draw square
             context.fillRect(sX, sY, mX - sX, mX - sX);
@@ -159,8 +170,6 @@ function drawRectangle(isCtrlPressed = false) {
             //draw rectangle
             context.fillRect(sX, sY, mX - sX, mY - sY);
         }
-        context.fillStyle = currentColor;
-        context.fill();
         context.stroke();
     }
 }
@@ -169,6 +178,8 @@ function drawEllipse(isCtrlPressed = false) {
     resetCanvas();
     if (drawingStatus) {
         context.beginPath();
+        context.fillStyle = currentColor;
+        context.strokeStyle = currentColor;
         if (isCtrlPressed) {
             //draw circle
             context.ellipse(sX, sY, Math.abs(mX - sX), Math.abs(mX - sX), 0, 0, 2 * Math.PI);
@@ -177,8 +188,6 @@ function drawEllipse(isCtrlPressed = false) {
             context.ellipse(sX, sY, Math.abs(mX - sX), Math.abs(mY - sY), 0, 0, 2 * Math.PI);
 
         }
-        context.fillStyle = currentColor;
-        context.strokeStyle = currentColor;
         context.fill();
         context.stroke();
 
@@ -375,7 +384,6 @@ function loadShapesList() {
 }
 
 function deleteShape(shapeId) {
-    // alert('Are you sure you want to delete the selected shape?')
     Shapes.splice(shapeId, 1);
     closePopup();
     resetCanvas();
@@ -385,7 +393,12 @@ function addColorsListeners() {
     for (let i = 0; i < colors.length - 1; i++) {
         let color = colors[i];
         color.addEventListener('click', (e) => {
-            currentColor = color.style.backgroundColor;
+
+            if (bgColorStatus) {
+                bgColor = color.style.backgroundColor;
+            } else {
+                currentColor = color.style.backgroundColor;
+            }
         })
         // console.log(color.style.backgroundColor);
     }
@@ -398,9 +411,21 @@ function closePopup() {
         element.style.display = 'none';
     }
 }
+
+function exportRaster() {
+    console.log('Exporting raster..')
+    let link = document.createElement('a');
+    link.href = canvas.toDataURL();
+    link.download = 'Exported.png'
+    link.click();
+}
+
 app = () => {
     canvas = document.querySelector('canvas');
     context = canvas.getContext('2d');
+
+    context.fillStyle = bgColor;
+    context.fillRect(0, 0, canvas.width, canvas.height)
 
     var shapeEllipse = document.getElementById('shapeEllipse');
     var shapeRectangle = document.getElementById('shapeRectangle');
@@ -414,19 +439,26 @@ app = () => {
 
     shapeEllipse.addEventListener('click', (e) => {
         selectedShape = shapeType['ellipse'];
+        bgColorStatus = false;
     });
 
     shapeRectangle.addEventListener('click', (e) => {
         selectedShape = shapeType['rectangle'];
+        bgColorStatus = false;
     });
 
     shapeLine.addEventListener('click', (e) => {
         selectedShape = shapeType['line'];
+        bgColorStatus = false;
     });
 
 
     colorPicker.addEventListener('change', (e) => {
-        currentColor = colorPicker.value;
+        if (bgColorStatus) {
+            bgColor = colorPicker.value;
+        } else {
+            currentColor = colorPicker.value;
+        }
     })
 
     lineWidthRange.addEventListener('change', (e) => {
@@ -445,6 +477,13 @@ app = () => {
         })
     }
 
+    document.getElementById('btnRaster').addEventListener('click', (e) => {
+        exportRaster();
+    });
+
+    document.getElementById('changeBackground').addEventListener('click', (e) => {
+        bgColorStatus = true;
+    });
 
 }
 
