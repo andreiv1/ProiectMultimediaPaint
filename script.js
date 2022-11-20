@@ -55,6 +55,7 @@ function mouseMove(e) {
             drawEllipse(e.ctrlKey);
         }
     }
+
 }
 
 //mouse is inactive
@@ -129,6 +130,7 @@ function resetCanvas() {
             context.beginPath();
             context.fillStyle = rectangle.color;
             context.strokeStyle = rectangle.color;
+            context.lineWidth = 1;
             context.fillRect(rectangle.x, rectangle.y, rectangle.w, rectangle.h);
             context.stroke();
 
@@ -136,6 +138,7 @@ function resetCanvas() {
             let ellipse = Shapes[i];
             context.beginPath();
             context.ellipse(ellipse.x, ellipse.y, ellipse.horizontalRadius, ellipse.verticalRadius, 0, 0, 2 * Math.PI);
+            context.lineWidth = 1;
             context.fillStyle = ellipse.color;
             context.strokeStyle = ellipse.color;
             context.fill();
@@ -161,6 +164,7 @@ function drawRectangle(isCtrlPressed = false) {
     resetCanvas();
     if (drawingStatus) {
         context.beginPath();
+        context.lineWidth = 1;
         context.fillStyle = currentColor;
         context.fill();
         if (isCtrlPressed) {
@@ -178,6 +182,7 @@ function drawEllipse(isCtrlPressed = false) {
     resetCanvas();
     if (drawingStatus) {
         context.beginPath();
+        context.lineWidth = 1;
         context.fillStyle = currentColor;
         context.strokeStyle = currentColor;
         if (isCtrlPressed) {
@@ -321,13 +326,13 @@ function loadShapesList() {
                 elHRad.addEventListener('change', (e) => {
                     let shapeId = elX.dataset.shapeId;
                     let selShape = Shapes[shapeId]
-                    selShape.horizontalRadius = elHRad.value;
+                    selShape.horizontalRadius = Math.abs(elHRad.value);
                     resetCanvas();
                 })
                 elVRad.addEventListener('change', (e) => {
                     let shapeId = elX.dataset.shapeId;
                     let selShape = Shapes[shapeId]
-                    selShape.verticalRadius = elVRad.value;
+                    selShape.verticalRadius = Math.abs(elVRad.value);
                     resetCanvas();
                 })
             });
@@ -406,7 +411,6 @@ function addColorsListeners() {
 
 function closePopup() {
     elements = document.getElementsByClassName('popup')
-    console.log('close popup')
     for (let element of elements) {
         element.style.display = 'none';
     }
@@ -420,8 +424,16 @@ function exportRaster() {
     link.click();
 }
 
+function changeCursorStyle(){
+    if(bgColorStatus == true){
+        canvas.style.cursor = `url("assets/bg-color.svg"),auto`;
+    } else {
+        canvas.style.cursor = 'crosshair';
+    }
+}
 app = () => {
     canvas = document.querySelector('canvas');
+    canvas.style.cursor = 'crosshair'
     context = canvas.getContext('2d');
 
     context.fillStyle = bgColor;
@@ -440,16 +452,19 @@ app = () => {
     shapeEllipse.addEventListener('click', (e) => {
         selectedShape = shapeType['ellipse'];
         bgColorStatus = false;
+        changeCursorStyle();
     });
 
     shapeRectangle.addEventListener('click', (e) => {
         selectedShape = shapeType['rectangle'];
         bgColorStatus = false;
+        changeCursorStyle();
     });
 
     shapeLine.addEventListener('click', (e) => {
         selectedShape = shapeType['line'];
         bgColorStatus = false;
+        changeCursorStyle();
     });
 
 
@@ -471,7 +486,6 @@ app = () => {
     // var popup = document.querySelector('.popupLine');
 
     for (let btn of document.getElementsByClassName('closePopup')) {
-        console.log(btn);
         btn.addEventListener('click', (e) => {
             closePopup();
         })
@@ -483,6 +497,7 @@ app = () => {
 
     document.getElementById('changeBackground').addEventListener('click', (e) => {
         bgColorStatus = true;
+        changeCursorStyle()
     });
 
 }
