@@ -424,6 +424,42 @@ function exportRaster() {
     link.click();
 }
 
+function convertToSvg(){
+    let svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute('width', canvas.width);
+    svg.setAttribute('height', canvas.height);
+    for(let shape of Shapes){
+        switch(shape.type){
+            case shapeType['line']:
+                let line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                line.setAttribute('x1',shape.startX);
+                line.setAttribute('y1',shape.startY);
+                line.setAttribute('x2',shape.endX);
+                line.setAttribute('y2',shape.endY);
+                svg.append(line)
+                break;
+            case shapeType['ellipse']:
+                let ellipse = document.createElementNS("http://www.w3.org/2000/svg","ellipse")
+                ellipse.setAttribute('cx',shape.x);
+                ellipse.setAttribute('cy',shape.y);
+                ellipse.setAttribute('rx',shape.horizontalRadius);
+                ellipse.setAttribute('ry',shape.verticalRadius);
+                svg.append(ellipse)
+                break;
+            case shapeType['rectangle']:
+                let rectangle = document.createElementNS("http://www.w3.org/2000/svg", "rect")
+                rectangle.setAttribute('x',shape.x);
+                rectangle.setAttribute('y',shape.y);
+                rectangle.setAttribute('width',shape.w);
+                rectangle.setAttribute('height',shape.h);
+                svg.append(rectangle);
+                break;
+        }
+    }
+
+    console.log(svg);
+}
+
 function changeCursorStyle(){
     if(bgColorStatus == true){
         canvas.style.cursor = `url("assets/bg-color.svg"),auto`;
@@ -493,6 +529,10 @@ app = () => {
 
     document.getElementById('btnRaster').addEventListener('click', (e) => {
         exportRaster();
+    });
+
+    document.getElementById('btnSvg').addEventListener('click', (e) => {
+        convertToSvg();
     });
 
     document.getElementById('changeBackground').addEventListener('click', (e) => {
