@@ -428,6 +428,23 @@ function convertToSvg(){
     let svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     svg.setAttribute('width', canvas.width);
     svg.setAttribute('height', canvas.height);
+    if(bgColor != defaultBgColor){
+
+        // this solution makes the entire surface background color
+        // let style = document.createElement('style')
+        // style.innerText = 'svg {background-color: ' + 'red'+ '; }'
+        // svg.append(style)
+        
+        
+        // workaround to make it only the canvas size
+        let rect = document.createElementNS('http://www.w3.org/2000/svg', "rect");
+        rect.setAttribute('x',0);
+        rect.setAttribute('y',0);
+        rect.setAttribute('width',canvas.width);
+        rect.setAttribute('height',canvas.height);
+        rect.setAttribute('fill',bgColor);
+        svg.appendChild(rect);
+    }
     for(let shape of Shapes){
         switch(shape.type){
             case shapeType['line']:
@@ -436,6 +453,9 @@ function convertToSvg(){
                 line.setAttribute('y1',shape.startY);
                 line.setAttribute('x2',shape.endX);
                 line.setAttribute('y2',shape.endY);
+
+                if(shape.color) line.setAttribute('stroke',shape.color);
+                if(shape.lineWidth) line.setAttribute('stroke-width',shape.lineWidth);
                 svg.append(line)
                 break;
             case shapeType['ellipse']:
@@ -444,6 +464,8 @@ function convertToSvg(){
                 ellipse.setAttribute('cy',shape.y);
                 ellipse.setAttribute('rx',shape.horizontalRadius);
                 ellipse.setAttribute('ry',shape.verticalRadius);
+
+                if(shape.color) ellipse.setAttribute('fill',shape.color);
                 svg.append(ellipse)
                 break;
             case shapeType['rectangle']:
@@ -452,12 +474,19 @@ function convertToSvg(){
                 rectangle.setAttribute('y',shape.y);
                 rectangle.setAttribute('width',shape.w);
                 rectangle.setAttribute('height',shape.h);
+
+                if(shape.color) rectangle.setAttribute('fill',shape.color);
                 svg.append(rectangle);
                 break;
         }
     }
+    var xmlSerializer = new XMLSerializer();
 
-    console.log(svg);
+    let link = document.createElement('a');
+    link.download = 'Exported.svg'
+    link.href = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(xmlSerializer.serializeToString(svg))
+    link.click()
+ 
 }
 
 function changeCursorStyle(){
