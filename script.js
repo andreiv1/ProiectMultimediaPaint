@@ -199,6 +199,8 @@ function drawEllipse(isCtrlPressed = false) {
     }
 }
 
+const popupMarginLeft = 180;
+const popupMarginTop = 30; 
 function loadShapesList() {
     shapesList.innerHTML = '';
     let countLines = 0, countEllipses = 0, countRectangles = 0;
@@ -248,13 +250,19 @@ function loadShapesList() {
             deleteShape(i)
         })
 
+        //POPUP FOR LINE
         if (shape.type == shapeType['line']) {
             var popupLine = document.querySelector('.popupLine');
             iconOptions.addEventListener('click', (e) => {
                 e.preventDefault();
+
                 closePopup();
                 console.log("Line options clicked");
-                popupLine.style.display = 'block'
+                let mX = e.clientX - popupMarginLeft;
+                let mY = e.clientY + popupMarginTop;
+
+                popupLine.style = `display: block; left: ${mX}px; top: ${mY}px;`
+
 
                 let startX = document.getElementById('startX')
                 let startY = document.getElementById('startY')
@@ -296,13 +304,19 @@ function loadShapesList() {
                     resetCanvas();
                 })
             });
-        } else if (shape.type == shapeType['ellipse']) {
+        } 
+        //POPUP FOR ELLIPSE
+        else if (shape.type == shapeType['ellipse']) {
             var popupEllipse = document.querySelector('.popupEllipse');
             iconOptions.addEventListener('click', (e) => {
                 e.preventDefault();
                 closePopup();
                 console.log("Rectangle options clicked");
-                popupEllipse.style.display = 'block'
+                let mX = e.clientX - popupMarginLeft;
+                let mY = e.clientY + popupMarginTop;
+
+                popupEllipse.style = `display: block; left: ${mX}px; top: ${mY}px;`
+  
 
                 let elX = document.getElementById('elX')
                 let elY = document.getElementById('elY')
@@ -342,13 +356,18 @@ function loadShapesList() {
                     resetCanvas();
                 })
             });
-        } else if (shape.type == shapeType['rectangle']) {
+        } 
+        //POPUP FOR RECTANGLE
+        else if (shape.type == shapeType['rectangle']) {
             var popupRectangle = document.querySelector('.popupRectangle');
             iconOptions.addEventListener('click', (e) => {
                 e.preventDefault();
                 closePopup();
                 console.log("Rectangle options clicked");
-                popupRectangle.style.display = 'block'
+                let mX = e.clientX - popupMarginLeft;
+                let mY = e.clientY + popupMarginTop;
+
+                popupRectangle.style = `display: block; left: ${mX}px; top: ${mY}px;`
 
                 let rectX = document.getElementById('rectX')
                 let rectY = document.getElementById('rectY')
@@ -498,7 +517,6 @@ function convertToSvg() {
 function getCurrentTime() {
     let date = new Date(Date.now());
     return date.toISOString().slice(0, 19).replace('T', ' ').replace(' ','-').replace(':','-');
-    // return date.getDay() + "-" + date.getMonth() + "-" + date.getYear() + "-" + date.getHours() + "-" + date.getMinutes() + "-" + date.getSeconds();
 }
 function changeCursorStyle() {
     if (bgColorStatus == true) {

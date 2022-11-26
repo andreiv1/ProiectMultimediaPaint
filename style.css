@@ -140,7 +140,7 @@ section {
 }
 
 .optionIcons> .fa-ellipsis-v:hover {
-  color: darkblue;
+  color: darkorange;
 }
 
 .object {
@@ -170,13 +170,15 @@ section {
 
 .popup {
   background-color: #ffffff;
-  width: 200px;
-  padding: 30px 40px;
+  width: 190px;
+  padding: 15px;
+  /* padding: 25px 25px; */
   position: fixed;
-  top: 150px;
-  right: 10%;
+  /* top: 150px; */
+  /* right: 10%; */
   border-radius: 8px;
-  border: 1px solid black;
+  /* border: 1px solid black; */
+  box-shadow:2px 3px 5px #999;
 }
 
 .option>button {
@@ -248,5 +250,26 @@ section {
 }
 
 .popup-header>h3 {
-  font-size: 100%;
+  font-size: 80%;
+}
+
+
+/* width */
+.objects-pane::-webkit-scrollbar {
+  width: 6px;
+}
+
+/* Track */
+.objects-pane::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+ 
+/* Handle */
+.objects-pane::-webkit-scrollbar-thumb {
+  background: #888; 
+}
+
+/* Handle on hover */
+.objects-pane::-webkit-scrollbar-thumb:hover {
+  background: #555; 
 }
