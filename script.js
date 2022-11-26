@@ -61,7 +61,7 @@ function mouseMove(e) {
 //mouse is inactive
 function mouseUp(e) {
     drawingStatus = false;
-    console.log('%cMouse is up (OFF)', 'color: red; background: yellow; font-size: 15px'); 
+    console.log('%cMouse is up (OFF)', 'color: red; background: yellow; font-size: 15px');
     if (bgColorStatus == true) {
         resetCanvas();
     } else {
@@ -213,32 +213,38 @@ function loadShapesList() {
         let shape = Shapes[i];
         let li = document.createElement('li')
         // li.innerHTML = JSON.stringify(shape);
-        li.innerHTML = '<span class="shapeTitle">'
-        li.innerHTML += shapeName[shape.type]
+        let span = document.createElement('span')
+        span.className = 'shapeTitle'
+        li.appendChild(span)
+        
+        span.innerHTML += shapeName[shape.type]
         if (shape.type == shapeType['line']) {
             countLines++;
-            li.innerHTML += ' #' + countLines;
+            span.innerHTML += ' #' + countLines;
         } else if (shape.type == shapeType['ellipse']) {
             countEllipses++;
-            li.innerHTML += ' #' + countEllipses;
+            span.innerHTML += ' #' + countEllipses;
         }
         else if (shape.type == shapeType['rectangle']) {
             countRectangles++;
-            li.innerHTML += ' #' + countRectangles;
+            span.innerHTML += ' #' + countRectangles;
         }
-        li.innerHTML += '</span>'
+        
+        let div = document.createElement('div');
+        div.className = 'optionIcons';
         let iconOptions = document.createElement('i')
         iconOptions.className = 'fa fa-ellipsis-v optionIcon'
         let iconDelete = document.createElement('i')
         iconDelete.className = 'fas fa-trash-alt optionIcon'
-        li.appendChild(iconOptions)
-        li.appendChild(iconDelete)
+        li.appendChild(div)
+        div.appendChild(iconOptions)
+        div.appendChild(iconDelete)
         li.className = 'object'
         li.dataset.id = i;
 
         iconDelete.addEventListener('click', (e) => {
             e.preventDefault();
-            console.log("delete clicked");
+
             deleteShape(i)
         })
 
@@ -420,62 +426,62 @@ function exportRaster() {
     console.log('Exporting raster..')
     let link = document.createElement('a');
     link.href = canvas.toDataURL();
-    link.download = 'Exported.png'
+    link.download = 'Exported_' +  getCurrentTime() + '.png';
     link.click();
 }
 
-function convertToSvg(){
+function convertToSvg() {
     let svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     svg.setAttribute('width', canvas.width);
     svg.setAttribute('height', canvas.height);
-    if(bgColor != defaultBgColor){
+    if (bgColor != defaultBgColor) {
 
         // this solution makes the entire surface background color
         // let style = document.createElement('style')
-        // style.innerText = 'svg {background-color: ' + 'red'+ '; }'
+        // style.innerText = 'svg {background-color: ' + bgColor + '; }'
         // svg.append(style)
-        
-        
+
+
         // workaround to make it only the canvas size
         let rect = document.createElementNS('http://www.w3.org/2000/svg', "rect");
-        rect.setAttribute('x',0);
-        rect.setAttribute('y',0);
-        rect.setAttribute('width',canvas.width);
-        rect.setAttribute('height',canvas.height);
-        rect.setAttribute('fill',bgColor);
+        rect.setAttribute('x', 0);
+        rect.setAttribute('y', 0);
+        rect.setAttribute('width', canvas.width);
+        rect.setAttribute('height', canvas.height);
+        rect.setAttribute('fill', bgColor);
         svg.appendChild(rect);
     }
-    for(let shape of Shapes){
-        switch(shape.type){
+    for (let shape of Shapes) {
+        switch (shape.type) {
             case shapeType['line']:
                 let line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-                line.setAttribute('x1',shape.startX);
-                line.setAttribute('y1',shape.startY);
-                line.setAttribute('x2',shape.endX);
-                line.setAttribute('y2',shape.endY);
+                line.setAttribute('x1', shape.startX);
+                line.setAttribute('y1', shape.startY);
+                line.setAttribute('x2', shape.endX);
+                line.setAttribute('y2', shape.endY);
 
-                if(shape.color) line.setAttribute('stroke',shape.color);
-                if(shape.lineWidth) line.setAttribute('stroke-width',shape.lineWidth);
+                if (shape.color) line.setAttribute('stroke', shape.color);
+                if (shape.lineWidth) line.setAttribute('stroke-width', shape.lineWidth);
                 svg.append(line)
                 break;
             case shapeType['ellipse']:
-                let ellipse = document.createElementNS("http://www.w3.org/2000/svg","ellipse")
-                ellipse.setAttribute('cx',shape.x);
-                ellipse.setAttribute('cy',shape.y);
-                ellipse.setAttribute('rx',shape.horizontalRadius);
-                ellipse.setAttribute('ry',shape.verticalRadius);
+                let ellipse = document.createElementNS("http://www.w3.org/2000/svg", "ellipse")
+                ellipse.setAttribute('cx', shape.x);
+                ellipse.setAttribute('cy', shape.y);
+                ellipse.setAttribute('rx', shape.horizontalRadius);
+                ellipse.setAttribute('ry', shape.verticalRadius);
 
-                if(shape.color) ellipse.setAttribute('fill',shape.color);
+                if (shape.color) ellipse.setAttribute('fill', shape.color);
                 svg.append(ellipse)
                 break;
             case shapeType['rectangle']:
                 let rectangle = document.createElementNS("http://www.w3.org/2000/svg", "rect")
-                rectangle.setAttribute('x',shape.x);
-                rectangle.setAttribute('y',shape.y);
-                rectangle.setAttribute('width',shape.w);
-                rectangle.setAttribute('height',shape.h);
+                rectangle.setAttribute('x', shape.x);
+                rectangle.setAttribute('y', shape.y);
+                rectangle.setAttribute('width', shape.w);
+                rectangle.setAttribute('height', shape.h);
 
-                if(shape.color) rectangle.setAttribute('fill',shape.color);
+                if (shape.color) rectangle.setAttribute('fill', shape.color);
                 svg.append(rectangle);
                 break;
         }
@@ -483,18 +489,38 @@ function convertToSvg(){
     var xmlSerializer = new XMLSerializer();
 
     let link = document.createElement('a');
-    link.download = 'Exported.svg'
+    link.download = 'Exported_' + getCurrentTime() + '.svg';
     link.href = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(xmlSerializer.serializeToString(svg))
     link.click()
- 
+
 }
 
-function changeCursorStyle(){
-    if(bgColorStatus == true){
+function getCurrentTime() {
+    let date = new Date(Date.now());
+    return date.toISOString().slice(0, 19).replace('T', ' ').replace(' ','-').replace(':','-');
+    // return date.getDay() + "-" + date.getMonth() + "-" + date.getYear() + "-" + date.getHours() + "-" + date.getMinutes() + "-" + date.getSeconds();
+}
+function changeCursorStyle() {
+    if (bgColorStatus == true) {
         canvas.style.cursor = `url("assets/bg-color.svg"),auto`;
     } else {
         canvas.style.cursor = 'crosshair';
     }
+}
+
+function activateButton(selectedBtn) {
+    selectedBtn.style = `filter: invert(17%) sepia(90%) saturate(3000%) hue-rotate(900deg)
+    brightness(100%) contrast(100%)`;
+    if (shapeEllipse != selectedBtn)
+        shapeEllipse.removeAttribute('style');
+    if (shapeRectangle != selectedBtn)
+        shapeRectangle.removeAttribute('style');
+    if (shapeLine != selectedBtn)
+        shapeLine.removeAttribute('style');
+    if (document.getElementById('changeBackground') != selectedBtn)
+        document.getElementById('changeBackground').removeAttribute('style');
+
+
 }
 app = () => {
     canvas = document.querySelector('canvas');
@@ -504,11 +530,13 @@ app = () => {
     context.fillStyle = bgColor;
     context.fillRect(0, 0, canvas.width, canvas.height)
 
+
     var shapeEllipse = document.getElementById('shapeEllipse');
     var shapeRectangle = document.getElementById('shapeRectangle');
     var shapeLine = document.getElementById('shapeLine');
     var colorPicker = document.getElementById('colorPicker');
     var lineWidthRange = document.getElementById('lineWidthRange');
+
 
     canvas.addEventListener('mouseup', mouseUp);
     canvas.addEventListener('mousemove', mouseMove);
@@ -517,18 +545,21 @@ app = () => {
     shapeEllipse.addEventListener('click', (e) => {
         selectedShape = shapeType['ellipse'];
         bgColorStatus = false;
+        activateButton(shapeEllipse);
         changeCursorStyle();
     });
 
     shapeRectangle.addEventListener('click', (e) => {
         selectedShape = shapeType['rectangle'];
         bgColorStatus = false;
+        activateButton(shapeRectangle);
         changeCursorStyle();
     });
 
     shapeLine.addEventListener('click', (e) => {
         selectedShape = shapeType['line'];
         bgColorStatus = false;
+        activateButton(shapeLine);
         changeCursorStyle();
     });
 
@@ -564,9 +595,11 @@ app = () => {
         convertToSvg();
     });
 
+
     document.getElementById('changeBackground').addEventListener('click', (e) => {
         bgColorStatus = true;
         changeCursorStyle()
+        activateButton(document.getElementById('changeBackground'));
     });
 
 }

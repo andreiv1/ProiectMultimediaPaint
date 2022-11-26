@@ -13,7 +13,6 @@
 </head>
 
 <body>
-
     <div class="content">
         <section class="settings-pane">
             <div class="row">
@@ -72,16 +71,16 @@
                 <label class="title">Export</label>
                 <ul class="options">
                     <li class="option">
-                        <button id="btnRaster">Raster</button>
+                        <button id="btnRaster" class="btnExport">Raster</button>
                     </li>
                     <li class="option">
-                        <button id="btnSvg">SVG</button>
+                        <button id="btnSvg" class="btnExport">SVG</button>
                     </li>
                 </ul>
             </div>
         </section>
         <section class="canvas-pane">
-            <canvas width="800" height="610"></canvas>
+            <canvas width="800" height="600"></canvas>
         </section>
         <section class="objects-pane">
             <div class="row">
@@ -96,42 +95,84 @@
         </section>
     </div>
     <div class="popup popupLine">
-        <button class="closePopup">&times;</button>
-        <h3>Line Properties</h3>
-        <label>Start X</label>
-        <input type="number" id="startX" name="startX">
-        <label>Start Y</label>
-        <input type="number" id="startY" name="startY">
-        <label>End X</label>
-        <input type="number" id="endX" name="endX">
-        <label>End Y</label>
-        <input type="number" id="endY" name="endY">
+        <div class="popup-header">
+            <h3>Line Properties</h3>
+            <button class="closePopup">&times;</button>
+        </div>
+        
+        <div class="controls">
+            <div class="control">
+                <label>Start X</label>
+                <input type="number" id="startX" name="startX">
+            </div>
+            <div class="control">
+                <label>Start Y</label>
+                <input type="number" id="startY" name="startY">
+            </div>
+            <div class="control">
+                <label>End X</label>
+                <input type="number" id="endX" name="endX">
+            </div>
+            <div class="control">
+                <label>End Y</label>
+                <input type="number" id="endY" name="endY">
+            </div>
+        </div>
+    </div>
     </div>
 
     <div class="popup popupEllipse">
-        <button class="closePopup">&times;</button>
-        <h3>Ellipse Properties</h3>
-        <label>X</label>
-        <input type="number" id="elX" name="elX">
-        <label>Y</label>
-        <input type="number" id="elY" name="elY">
-        <label>Horizontal Radius</label>
-        <input type="number" id="elHRad" name="elHRad">
-        <label>Vertical Radius</label>
-        <input type="number" id="elVRad" name="elVRad">
+        <div class="popup-header">
+            <h3>Ellipse Properties</h3>
+            <button class="closePopup">&times;</button>
+        </div>
+        
+        
+        <div class="controls">
+            <div class="control">
+                <label>X</label>
+                <input type="number" id="elX" name="elX">
+            </div>
+            <div class="control">
+                <label>Y</label>
+                <input type="number" id="elY" name="elY">
+            </div>
+            <div class="control">
+                <label>Horizontal R</label>
+                <input type="number" id="elHRad" name="elHRad">
+            </div>
+            <div class="control">
+                <label>Vertical R</label>
+                <input type="number" id="elVRad" name="elVRad">
+            </div>
+        </div>
+    </div>
     </div>
 
     <div class="popup popupRectangle">
-        <button class="closePopup">&times;</button>
-        <h3>Rectangle Properties</h3>
-        <label>X</label>
-        <input type="number" id="rectX" name="rectX">
-        <label>Y</label>
-        <input type="number" id="rectY" name="rectY">
-        <label>Width</label>
-        <input type="number" id="rectW" name="rectW">
-        <label>Height</label>
-        <input type="number" id="rectH" name="rectH">
+        <div class="popup-header">
+            <h3>Rectangle Properties</h3>
+            <button class="closePopup">&times;</button>
+        </div>
+        
+        <div class="controls">
+            <div class="control">
+                <label>X</label>
+                <input type="number" id="rectX" name="rectX">
+            </div>
+            <div class="control">
+                <label>Y</label>
+                <input type="number" id="rectY" name="rectY">
+            </div>
+            <div class="control">
+                <label>Width</label>
+                <input type="number" id="rectW" name="rectW">
+            </div>
+            <div class="control">
+                <label>Height</label>
+                <input type="number" id="rectH" name="rectH">
+            </div>
+        </div>
     </div>
     <script src="script.js"></script>
 </body>

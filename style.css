@@ -10,22 +10,25 @@ body {
   display: flex;
   width: 100%;
   gap: 10px;
-  padding: 100px;
+  padding-top: 30px;
+  padding-left: 30px;
   max-width: 1000px;
 }
 
 section {
   background: #fff;
 }
+
 .canvas-pane {
   flex: 1;
   padding: 0 !important;
+  height: 600px;
 }
 
 .objects-pane {
   flex-shrink: 0;
   width: 220px;
-  height: 600px;
+  height: 585px;
   padding: 15px 22px 0;
   overflow: auto;
 }
@@ -33,6 +36,7 @@ section {
 .settings-pane {
   width: 210px;
   padding: 15px 22px 0;
+  height: 585px;
 }
 
 .settings-pane row {
@@ -50,10 +54,11 @@ section {
   padding-inline-start: 0px;
 }
 
-.row > .title {
+.row>.title {
   font-size: 15px;
   font-weight: 800;
 }
+
 .row .options .option {
   display: flex;
   align-items: center;
@@ -66,18 +71,18 @@ section {
 }
 
 .row .options .option:hover :where(span, img) {
-  filter: invert(17%) sepia(90%) saturate(3000%) hue-rotate(900deg)
-    brightness(100%) contrast(100%);
+  filter: invert(17%) sepia(90%) saturate(3000%) hue-rotate(900deg) brightness(100%) contrast(100%);
 }
 
-.option > img {
+.option>img {
   margin-right: 10px;
 }
 
 .colors {
   display: flex;
 }
-.colors > .option {
+
+.colors>.option {
   display: inline-block !important;
   vertical-align: top;
   width: 20px;
@@ -88,7 +93,7 @@ section {
   border: 0.7px solid #bfbfbf;
 }
 
-.colors > .option:nth-child(12) {
+.colors>.option:nth-child(12) {
   background-image: url(assets/color_circle.svg);
   background-size: 20px 20px;
 }
@@ -109,7 +114,9 @@ section {
   margin-inline-end: 0px;
   padding-inline-start: 0px;
 }
+
 .object {
+  transition: transform .7s ease-in-out;
   margin-top: 10px;
   list-style: none;
   padding: 10px 20px;
@@ -118,36 +125,40 @@ section {
   background: white;
   transition: all 0.3s;
   border-radius: 7px;
-  display: flex;
-  justify-content: left;
   align-items: center;
   flex: 1;
+  display: flex;
+  flex-direction: row;
 }
 
 .object:hover {
-  background: #0095f3;
-  color: #fff;
+  transform: scale(1.1, 1.1);
 }
 
-.object > .fa-trash-alt:hover {
-  color: red;
+.optionIcons> .fa-trash-alt:hover {
+  color: darkred;
 }
 
-.object > .fa-ellipsis-v:hover {
-  color: darkorchid;
+.optionIcons> .fa-ellipsis-v:hover {
+  color: darkblue;
 }
 
-.object > li {
+.object {
   display: flex;
+	display: flex;
+  justify-content: space-between;
 }
 
-.object > .shapeTitle {
+.object>.shapeTitle {
   font-size: 14px;
   flex: 1;
-  text-align: right;
+
+
 }
-.object > .optionIcon {
-  margin-left: 13px;
+
+
+.object>.optionIcons>.optionIcon {
+  margin-left: 10px;
   cursor: pointer;
 }
 
@@ -162,11 +173,80 @@ section {
   width: 200px;
   padding: 30px 40px;
   position: fixed;
-  top: 12%;
+  top: 150px;
   right: 10%;
   border-radius: 8px;
+  border: 1px solid black;
 }
 
-.option > button {
+.option>button {
   width: 100%;
+}
+
+.btnExport {
+  background-color: white;
+  opacity: 0.5;
+  color: black;
+  border: 2px solid #008CBA;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.btnExport:hover {
+  background-color: #008CBA;
+  color: white;
+}
+
+.popup>.controls {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 10px;
+}
+
+.popup>.controls>.control {
+  flex: 1 1 auto;
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: row;
+}
+
+.popup>.controls>.control>label {
+  flex: 0 0 65%;
+  flex-wrap: wrap;
+  width: 65%;
+}
+
+.popup>.controls>.control>input {
+  flex: 0 0 35%;
+  width: 35%;
+}
+
+.control>input {
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  padding: 4px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.closePopup {
+  color: black;;
+  cursor: pointer;
+  background-color: transparent;
+  border: 0px transparent;
+  font-size: 30px;
+  margin-left: auto;
+}
+
+.popup-header {
+  display: flex;
+}
+
+.popup-header>h3 {
+  font-size: 100%;
 }
