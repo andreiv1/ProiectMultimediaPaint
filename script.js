@@ -508,7 +508,7 @@ function convertToSvg() {
                 line.setAttribute('x2', shape.endX);
                 line.setAttribute('y2', shape.endY);
 
-                if (shape.color) line.setAttribute('stroke', shape.color);
+                if (shape.color1) line.setAttribute('stroke', shape.color1);
                 if (shape.lineWidth) line.setAttribute('stroke-width', shape.lineWidth);
                 svg.append(line)
                 break;
@@ -518,18 +518,30 @@ function convertToSvg() {
                 ellipse.setAttribute('cy', shape.y);
                 ellipse.setAttribute('rx', shape.horizontalRadius);
                 ellipse.setAttribute('ry', shape.verticalRadius);
-
-                if (shape.color) ellipse.setAttribute('fill', shape.color);
+                if (shape.color1) ellipse.setAttribute('stroke', shape.color1);
+                if (shape.lineWidth) ellipse.setAttribute('stroke-width', shape.lineWidth);
+                if (shape.color2 && shape.solidFill) ellipse.setAttribute('fill', shape.color2);
+                else ellipse.setAttribute('fill', 'none');
                 svg.append(ellipse)
                 break;
             case shapeType['rectangle']:
                 let rectangle = document.createElementNS("http://www.w3.org/2000/svg", "rect")
-                rectangle.setAttribute('x', shape.x);
-                rectangle.setAttribute('y', shape.y);
-                rectangle.setAttribute('width', shape.w);
-                rectangle.setAttribute('height', shape.h);
+                let x = shape.x, y = shape.y, width = shape.w, height = shape.h;
 
-                if (shape.color) rectangle.setAttribute('fill', shape.color);
+                //convert negative width & height to positive 
+                //make svg placement exactly as canvas
+                if(width < 0) x = x - Math.abs(width)
+                if(height < 0) y = y - Math.abs(height)
+                width = Math.abs(width)
+                height = Math.abs(height)
+                rectangle.setAttribute('x', x);
+                rectangle.setAttribute('y', y);
+                rectangle.setAttribute('width', width);
+                rectangle.setAttribute('height', height);
+                if (shape.color1) rectangle.setAttribute('stroke', shape.color1);
+                if (shape.lineWidth) rectangle.setAttribute('stroke-width', shape.lineWidth);
+                if (shape.color2 && shape.solidFill) rectangle.setAttribute('fill', shape.color2);
+                else rectangle.setAttribute('fill', 'none');
                 svg.append(rectangle);
                 break;
         }
