@@ -10,6 +10,7 @@ var canvas, context;
 var drawingStatus = false;
 var selectedShape = UNSELECTED_SHAPE;
 var currentColor = defaultColor;
+
 var currentLineWidth = defaultLineWidth;
 var bgColor = defaultBgColor;
 var bgColorStatus = false;
@@ -520,7 +521,7 @@ function getCurrentTime() {
 }
 function changeCursorStyle() {
     if (bgColorStatus == true) {
-        canvas.style.cursor = `url("assets/bg-color.svg"),auto`;
+        canvas.style.cursor = `url("media/bg-color.svg"),auto`;
     } else {
         canvas.style.cursor = 'crosshair';
     }
