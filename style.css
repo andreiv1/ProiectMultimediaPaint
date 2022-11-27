@@ -21,6 +21,7 @@ section {
 
 .canvas-pane {
   flex: 1;
+  margin-top: 15px;
   padding: 0 !important;
   height: 600px;
 }
@@ -28,7 +29,7 @@ section {
 .objects-pane {
   flex-shrink: 0;
   width: 220px;
-  height: 585px;
+  height: 620px;
   padding: 15px 22px 0;
   overflow: auto;
 }
@@ -36,7 +37,7 @@ section {
 .settings-pane {
   width: 210px;
   padding: 15px 22px 0;
-  height: 585px;
+  height: 620px;
 }
 
 .settings-pane row {
@@ -54,7 +55,7 @@ section {
   padding-inline-start: 0px;
 }
 
-.row>.title {
+.row > .title {
   font-size: 15px;
   font-weight: 800;
 }
@@ -67,14 +68,15 @@ section {
 }
 
 .row {
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 
 .row .options .option:hover :where(span, img) {
-  filter: invert(17%) sepia(90%) saturate(3000%) hue-rotate(900deg) brightness(100%) contrast(100%);
+  filter: invert(17%) sepia(90%) saturate(3000%) hue-rotate(900deg)
+    brightness(100%) contrast(100%);
 }
 
-.option>img {
+.option > img {
   margin-right: 10px;
 }
 
@@ -82,7 +84,7 @@ section {
   display: flex;
 }
 
-.colors>.option {
+.colors > .option {
   display: inline-block !important;
   vertical-align: top;
   width: 20px;
@@ -93,10 +95,27 @@ section {
   border: 0.7px solid #bfbfbf;
 }
 
-.colors>.option:nth-child(12) {
-  background-image: url(assets/color_circle.svg);
+.colors > .option:nth-child(12) {
+  background-image: url(media/color_circle.svg);
   background-size: 20px 20px;
 }
+
+.pickColors {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+}
+.pickColors > .option {
+  display: inline-block !important;
+  vertical-align: top;
+  width: 25px;
+  height: 25px;
+  background-color: red;
+  margin-right: 10px;
+  border-radius: 50%;
+  border: 0.7px solid #bfbfbf;
+}
+
 
 .row:nth-child(4) {
   clear: both;
@@ -116,7 +135,7 @@ section {
 }
 
 .object {
-  transition: transform .7s ease-in-out;
+  transition: transform 0.7s ease-in-out;
   margin-top: 10px;
   list-style: none;
   padding: 10px 20px;
@@ -135,29 +154,26 @@ section {
   transform: scale(1.1, 1.1);
 }
 
-.optionIcons> .fa-trash-alt:hover {
+.optionIcons > .fa-trash-alt:hover {
   color: darkred;
 }
 
-.optionIcons> .fa-ellipsis-v:hover {
+.optionIcons > .fa-ellipsis-v:hover {
   color: darkorange;
 }
 
 .object {
   display: flex;
-	display: flex;
+  display: flex;
   justify-content: space-between;
 }
 
-.object>.shapeTitle {
+.object > .shapeTitle {
   font-size: 14px;
   flex: 1;
-
-
 }
 
-
-.object>.optionIcons>.optionIcon {
+.object > .optionIcons > .optionIcon {
   margin-left: 10px;
   cursor: pointer;
 }
@@ -178,10 +194,10 @@ section {
   /* right: 10%; */
   border-radius: 8px;
   /* border: 1px solid black; */
-  box-shadow:2px 3px 5px #999;
+  box-shadow: 2px 3px 5px #999;
 }
 
-.option>button {
+.option > button {
   width: 100%;
 }
 
@@ -189,18 +205,18 @@ section {
   background-color: white;
   opacity: 0.5;
   color: black;
-  border: 2px solid #008CBA;
+  border: 2px solid #008cba;
   cursor: pointer;
   padding: 5px;
   border-radius: 5px;
 }
 
 .btnExport:hover {
-  background-color: #008CBA;
+  background-color: #008cba;
   color: white;
 }
 
-.popup>.controls {
+.popup > .controls {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -208,25 +224,25 @@ section {
   padding: 10px;
 }
 
-.popup>.controls>.control {
+.popup > .controls > .control {
   flex: 1 1 auto;
   margin-bottom: 10px;
   display: flex;
   flex-direction: row;
 }
 
-.popup>.controls>.control>label {
+.popup > .controls > .control > label {
   flex: 0 0 65%;
   flex-wrap: wrap;
   width: 65%;
 }
 
-.popup>.controls>.control>input {
+.popup > .controls > .control > input {
   flex: 0 0 35%;
   width: 35%;
 }
 
-.control>input {
+.control > input {
   display: inline-block;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -237,7 +253,7 @@ section {
 }
 
 .closePopup {
-  color: black;;
+  color: black;
   cursor: pointer;
   background-color: transparent;
   border: 0px transparent;
@@ -249,10 +265,9 @@ section {
   display: flex;
 }
 
-.popup-header>h3 {
+.popup-header > h3 {
   font-size: 80%;
 }
-
 
 /* width */
 .objects-pane::-webkit-scrollbar {
@@ -261,15 +276,24 @@ section {
 
 /* Track */
 .objects-pane::-webkit-scrollbar-track {
-  background: #f1f1f1; 
+  background: #f1f1f1;
 }
- 
+
 /* Handle */
 .objects-pane::-webkit-scrollbar-thumb {
-  background: #888; 
+  background: #888;
 }
 
 /* Handle on hover */
 .objects-pane::-webkit-scrollbar-thumb:hover {
-  background: #555; 
+  background: #555;
+}
+
+#solidFillCheck{
+  vertical-align: middle;
+  margin-left: 15px;
+}
+
+#lineWidthRange{
+  width: 130px;
 }

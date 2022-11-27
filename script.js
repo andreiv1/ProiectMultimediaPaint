@@ -9,7 +9,10 @@ var canvas, context;
 
 var drawingStatus = false;
 var selectedShape = UNSELECTED_SHAPE;
-var currentColor = defaultColor;
+var currentColor1 = defaultColor;  // shape line
+var currentColor2 = defaultBgColor; // shape fill
+var activeColor = 1;
+var currentSolidFill = true;
 
 var currentLineWidth = defaultLineWidth;
 var bgColor = defaultBgColor;
@@ -74,7 +77,7 @@ function mouseUp(e) {
         if (selectedShape == shapeType['line']) {
             Shapes.push({
                 startX: sX, startY: sY, endX: mX, endY: mY,
-                color: currentColor,
+                color: currentColor1,
                 lineWidth: currentLineWidth,
                 type: shapeType['line']
             })
@@ -88,7 +91,10 @@ function mouseUp(e) {
             }
             Shapes.push({
                 x: sX, y: sY, w: squareW, h: squareH,
-                color: currentColor,
+                color1: currentColor1,
+                color2: currentColor2,
+                lineWidth: currentLineWidth,
+                solidFill: currentSolidFill,
                 type: shapeType['rectangle']
             })
             drawRectangle(e.ctrlKey);
@@ -100,7 +106,10 @@ function mouseUp(e) {
             }
             Shapes.push({
                 x: sX, y: sY, horizontalRadius: horizontalRadius, verticalRadius: verticalRadius,
-                color: currentColor,
+                color1: currentColor1,
+                color2: currentColor2,
+                lineWidth: currentLineWidth,
+                solidFill: currentSolidFill,
                 type: shapeType['ellipse']
             })
         }
@@ -113,8 +122,10 @@ function mouseUp(e) {
 function resetCanvas() {
     context.clearRect(0, 0, canvas.width, canvas.height);
     console.log('bgColor', bgColor);
+    context.beginPath();
     context.fillStyle = bgColor;
-    context.fillRect(0, 0, canvas.width, canvas.height)
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    context.closePath();
     for (let i = 0; i < Shapes.length; i++) {
         let shape = Shapes[i];
         if (shape.type == shapeType['line']) {
@@ -125,25 +136,33 @@ function resetCanvas() {
             context.lineWidth = line.lineWidth;
             context.strokeStyle = line.color;
             context.stroke();
+            context.closePath();
 
         } else if (shape.type == shapeType['rectangle']) {
             let rectangle = Shapes[i];
             context.beginPath();
-            context.fillStyle = rectangle.color;
-            context.strokeStyle = rectangle.color;
-            context.lineWidth = 1;
-            context.fillRect(rectangle.x, rectangle.y, rectangle.w, rectangle.h);
+            context.lineWidth = rectangle.lineWidth;
+            context.strokeStyle = rectangle.color1;
+            context.fillStyle = rectangle.color2;
+            context.rect(rectangle.x, rectangle.y, rectangle.w, rectangle.h);
+            if (rectangle.solidFill) {
+                context.fill();
+            }
             context.stroke();
+            context.closePath();
 
         } else if (shape.type == shapeType['ellipse']) {
             let ellipse = Shapes[i];
             context.beginPath();
+            context.lineWidth = ellipse.lineWidth;
+            context.strokeStyle = ellipse.color1;
+            context.fillStyle = ellipse.color2;
             context.ellipse(ellipse.x, ellipse.y, ellipse.horizontalRadius, ellipse.verticalRadius, 0, 0, 2 * Math.PI);
-            context.lineWidth = 1;
-            context.fillStyle = ellipse.color;
-            context.strokeStyle = ellipse.color;
-            context.fill();
+            if (ellipse.solidFill) {
+                context.fill();
+            }
             context.stroke();
+            context.closePath();
         }
     }
     loadShapesList()
@@ -154,10 +173,11 @@ function drawLine() {
     if (drawingStatus) {
         context.beginPath();
         context.lineWidth = currentLineWidth;
-        context.strokeStyle = currentColor;
+        context.strokeStyle = currentColor1;
         context.moveTo(sX, sY);
         context.lineTo(mX, mY);
         context.stroke();
+        context.closePath();
     }
 }
 
@@ -165,17 +185,20 @@ function drawRectangle(isCtrlPressed = false) {
     resetCanvas();
     if (drawingStatus) {
         context.beginPath();
-        context.lineWidth = 1;
-        context.fillStyle = currentColor;
-        context.fill();
-        if (isCtrlPressed) {
-            //draw square
-            context.fillRect(sX, sY, mX - sX, mX - sX);
-        } else {
-            //draw rectangle
-            context.fillRect(sX, sY, mX - sX, mY - sY);
+        context.lineWidth = currentLineWidth;
+        context.strokeStyle = currentColor1;
+        context.fillStyle = currentColor2;
+
+        let W = mX - sX, H = mY - sY;
+        if (isCtrlPressed)
+            H = W;
+
+        context.rect(sX, sY, W, H);
+        if (currentSolidFill) {
+            context.fill();
         }
         context.stroke();
+        context.closePath();
     }
 }
 
@@ -183,25 +206,25 @@ function drawEllipse(isCtrlPressed = false) {
     resetCanvas();
     if (drawingStatus) {
         context.beginPath();
-        context.lineWidth = 1;
-        context.fillStyle = currentColor;
-        context.strokeStyle = currentColor;
+        context.lineWidth = currentLineWidth;
+        context.strokeStyle = currentColor1;
+        context.fillStyle = currentColor2;
+        let HR = Math.abs(mX - sX), VR = Math.abs(mY - sY);
         if (isCtrlPressed) {
-            //draw circle
-            context.ellipse(sX, sY, Math.abs(mX - sX), Math.abs(mX - sX), 0, 0, 2 * Math.PI);
-        } else {
-            //draw ellipse
-            context.ellipse(sX, sY, Math.abs(mX - sX), Math.abs(mY - sY), 0, 0, 2 * Math.PI);
-
+            //draw circle with radius R
+            VR = HR;
         }
-        context.fill();
+        context.ellipse(sX, sY, HR, VR, 0, 0, 2 * Math.PI);
+        if (currentSolidFill) {
+            context.fill();
+        }
         context.stroke();
-
+        context.closePath();
     }
 }
 
 const popupMarginLeft = 180;
-const popupMarginTop = 30; 
+const popupMarginTop = 30;
 function loadShapesList() {
     shapesList.innerHTML = '';
     let countLines = 0, countEllipses = 0, countRectangles = 0;
@@ -219,7 +242,7 @@ function loadShapesList() {
         let span = document.createElement('span')
         span.className = 'shapeTitle'
         li.appendChild(span)
-        
+
         span.innerHTML += shapeName[shape.type]
         if (shape.type == shapeType['line']) {
             countLines++;
@@ -232,7 +255,7 @@ function loadShapesList() {
             countRectangles++;
             span.innerHTML += ' #' + countRectangles;
         }
-        
+
         let div = document.createElement('div');
         div.className = 'optionIcons';
         let iconOptions = document.createElement('i')
@@ -305,7 +328,7 @@ function loadShapesList() {
                     resetCanvas();
                 })
             });
-        } 
+        }
         //POPUP FOR ELLIPSE
         else if (shape.type == shapeType['ellipse']) {
             var popupEllipse = document.querySelector('.popupEllipse');
@@ -317,7 +340,7 @@ function loadShapesList() {
                 let mY = e.clientY + popupMarginTop;
 
                 popupEllipse.style = `display: block; left: ${mX}px; top: ${mY}px;`
-  
+
 
                 let elX = document.getElementById('elX')
                 let elY = document.getElementById('elY')
@@ -357,7 +380,7 @@ function loadShapesList() {
                     resetCanvas();
                 })
             });
-        } 
+        }
         //POPUP FOR RECTANGLE
         else if (shape.type == shapeType['rectangle']) {
             var popupRectangle = document.querySelector('.popupRectangle');
@@ -428,8 +451,13 @@ function addColorsListeners() {
             if (bgColorStatus) {
                 bgColor = color.style.backgroundColor;
             } else {
-                currentColor = color.style.backgroundColor;
+                if (activeColor == 1)
+                    currentColor1 = color.style.backgroundColor;
+                else if (activeColor == 2)
+                    currentColor2 = color.style.backgroundColor;
+                changeActiveColor();
             }
+
         })
         // console.log(color.style.backgroundColor);
     }
@@ -446,7 +474,7 @@ function exportRaster() {
     console.log('Exporting raster..')
     let link = document.createElement('a');
     link.href = canvas.toDataURL();
-    link.download = 'Exported_' +  getCurrentTime() + '.png';
+    link.download = 'Exported_' + getCurrentTime() + '.png';
     link.click();
 }
 
@@ -517,7 +545,7 @@ function convertToSvg() {
 
 function getCurrentTime() {
     let date = new Date(Date.now());
-    return date.toISOString().slice(0, 19).replace('T', ' ').replace(' ','-').replace(':','-');
+    return date.toISOString().slice(0, 19).replace('T', ' ').replace(' ', '-').replace(':', '-');
 }
 function changeCursorStyle() {
     if (bgColorStatus == true) {
@@ -538,6 +566,22 @@ function activateButton(selectedBtn) {
         shapeLine.removeAttribute('style');
     if (document.getElementById('changeBackground') != selectedBtn)
         document.getElementById('changeBackground').removeAttribute('style');
+}
+
+function changeActiveColor() {
+    let color1 = document.getElementById('color1');
+    let color2 = document.getElementById('color2');
+    let border = '3px solid #bfbfbf; '
+
+    if (activeColor == 1) {
+        color1.style = 'border: 3px solid #bfbfbf;'
+        color2.style = '';
+    } else if (activeColor == 2) {
+        color2.style = 'border: 3px solid #bfbfbf;'
+        color1.style = '';
+    }
+    color1.style.backgroundColor = currentColor1;
+    color2.style.backgroundColor = currentColor2;
 
 
 }
@@ -587,7 +631,11 @@ app = () => {
         if (bgColorStatus) {
             bgColor = colorPicker.value;
         } else {
-            currentColor = colorPicker.value;
+            if (activeColor == 1)
+                currentColor1 = colorPicker.value;
+            else if (activeColor == 2)
+                currentColor2 = colorPicker.value;
+            changeActiveColor()
         }
     })
 
@@ -621,6 +669,24 @@ app = () => {
         activateButton(document.getElementById('changeBackground'));
     });
 
+    document.getElementById('color1').addEventListener('click', (e) => {
+        console.log('color 1 clicked');
+        activeColor = 1;
+        console.log('active color: ' + activeColor);
+        changeActiveColor()
+    });
+
+    document.getElementById('color2').addEventListener('click', (e) => {
+        console.log('color 2 clicked');
+        activeColor = 2;
+        console.log('active color: ' + activeColor);
+        changeActiveColor()
+    });
+
+    let solidFillCheck = document.getElementById('solidFillCheck');
+    solidFillCheck.addEventListener('click', (e) => {
+        currentSolidFill = solidFillCheck.checked;
+    });
 }
 
 document.addEventListener('DOMContentLoaded', app);
