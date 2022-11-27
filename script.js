@@ -508,7 +508,7 @@ function convertToSvg() {
                 line.setAttribute('x2', shape.endX);
                 line.setAttribute('y2', shape.endY);
 
-                if (shape.color1) line.setAttribute('stroke', shape.color1);
+                if (shape.color) line.setAttribute('stroke', shape.color);
                 if (shape.lineWidth) line.setAttribute('stroke-width', shape.lineWidth);
                 svg.append(line)
                 break;
